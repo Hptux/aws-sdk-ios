@@ -124,7 +124,14 @@ static NSString *const AWSInfoGoogleIdentifier = @"GoogleSignIn";
 + (AWSAuthUIConfiguration *)getDefaultAuthUIConfiguration {
     
     AWSAuthUIConfiguration *authUIConfig = [[AWSAuthUIConfiguration alloc] init];
-    
+
+    Class appleClass = NSClassFromString(@"AWSAppleSignInButton");
+    if (appleClass) {
+        [authUIConfig addAWSSignInButtonViewClass:appleClass];
+    } else {
+        AWSDDLogWarn(@"Found Apple sign in configuration in awsconfiguration.json but could not find dependencies. Skipping rendering in AuthUI");
+    }
+
     if ([AWSAuthUIViewController isConfigurationKeyPresent:AWSInfoCognitoUserPoolIdentifier]) {
         Class userpoolClass = NSClassFromString(@"AWSCognitoUserPoolsSignInProvider");
         if (userpoolClass) {
